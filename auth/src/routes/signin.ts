@@ -1,12 +1,14 @@
 import express, { Request, Response } from "express";
-import { AppDataSource } from "../db/data-source";
-import { User } from "../entities/User.entity";
+import { userRepo } from "../db/data-source";
+
 import { PasswordMethods } from "../utils/Password";
 import jwt from "jsonwebtoken";
 import { NotFoundError } from "@postcom/common";
+import { plainToInstance } from "class-transformer";
+import { UserDto } from "../dto/user.dto";
 
 const router = express.Router();
-const userRepo = AppDataSource.getRepository(User);
+
 router.post("/api/user/signin", async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
@@ -17,7 +19,7 @@ router.post("/api/user/signin", async (req: Request, res: Response) => {
         throw new NotFoundError();
     }
     const isValidPass = await PasswordMethods.comparePassword(
-        user.passhash,
+        user.password,
         password
     );
 
@@ -36,7 +38,9 @@ router.post("/api/user/signin", async (req: Request, res: Response) => {
     req.session = {
         jwt: userJwt,
     };
-    res.status(201).send({ user });
+
+    const tobeSent = plainToInstance(UserDto, user);
+    res.status(201).send({ user: tobeSent });
 });
 
 export { router as signinRouter };

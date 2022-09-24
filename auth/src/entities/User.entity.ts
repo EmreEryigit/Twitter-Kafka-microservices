@@ -1,40 +1,42 @@
 import {
     AfterInsert,
+    BeforeInsert,
     Column,
     Entity,
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
 import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
-import { Post } from "./Post.entity";
-import { Comment } from "./Comment.entity";
+
 import { Exclude } from "class-transformer";
+import { PasswordMethods } from "../utils/Password";
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
     @IsString()
+    @Column()
     @MaxLength(35)
     @MinLength(4)
     name: string;
 
-    @Column()
+    @Column({
+        unique: true,
+    })
     @IsEmail()
     email: string;
 
     @Exclude()
     @Column()
     @IsString()
-    passhash: string;
+    password: string;
 
-    @OneToMany(() => Post, (post) => post.author)
-    posts: Post[];
-
-    @OneToMany(() => Comment, (comment) => comment.author)
-    comments: Comment[];
+    @BeforeInsert()
+    async BeforeInsert() {
+        this.password = await PasswordMethods.hashPassword(this.password);
+    }
 
     @AfterInsert()
     logInsert() {

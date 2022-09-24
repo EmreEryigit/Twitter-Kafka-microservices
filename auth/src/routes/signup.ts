@@ -1,17 +1,18 @@
 import { validate } from "class-validator";
 import express, { Request, Response } from "express";
-import { AppDataSource } from "../db/data-source";
+import { userRepo } from "../db/data-source";
 import { User } from "../entities/User.entity";
-import { PasswordMethods } from "../utils/Password";
 import jwt from "jsonwebtoken";
 import {
     BadRequestError,
     currentUser,
     RequestValidationError,
 } from "@postcom/common";
+import { plainToClass, plainToInstance } from "class-transformer";
+import { UserDto } from "../dto/user.dto";
+import { UserCreatedProducer } from "../events/userCreatedProducer";
 
 const router = express.Router();
-const userRepo = AppDataSource.getRepository(User);
 
 router.post("/api/user/signup", async (req: Request, res: Response) => {
     const { email, password, name } = req.body;
@@ -24,7 +25,7 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
     const user = new User();
     user.email = email;
     user.name = name;
-    user.passhash = await PasswordMethods.hashPassword(password);
+    user.password = password;
 
     const errors = await validate(user);
     if (errors.length > 0) {
@@ -32,6 +33,20 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
         throw new RequestValidationError(errors);
     }
     await userRepo.save(user);
+
+    const producer = new UserCreatedProducer();
+    await producer.start();
+    console.log("producer connected");
+
+    await producer.sendBatch([
+        {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+        },
+    ]);
+    console.log("batch sent");
+
     const userJwt = jwt.sign(
         {
             id: user.id,
@@ -42,17 +57,9 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
     req.session = {
         jwt: userJwt,
     };
-    console.log(userJwt, req.session);
 
-    res.status(201).send({ user });
-});
-
-router.get("/api/user", currentUser, async (req: Request, res: Response) => {
-    const users = await userRepo.find();
-    res.send({
-        users,
-        currentUser1: req.currentUser,
-    });
+    const tobeSent = plainToInstance(UserDto, user);
+    res.status(201).send({ user: tobeSent });
 });
 
 /* router.get("/api/user/:id", async (req: Request, res: Response) => {

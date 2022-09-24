@@ -16,3 +16,19 @@ build:
         manual:
           - src: src/**/*.ts
             dest: .
+    - image: emreeryigit/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+    - image: emreeryigit/comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .

@@ -17,4 +17,17 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
-          
+          - path: /api/post/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: posts-srv
+                port:
+                  number: 3000
+          - path: /api/comment/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: comments-srv
+                port:
+                  number: 3000

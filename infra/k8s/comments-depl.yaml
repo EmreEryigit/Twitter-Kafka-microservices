@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: comments-depl
 spec:
   selector:
     matchLabels:
-      app: auth
+      app: comments
   template:
     metadata:
       labels:
-        app: auth
+        app: comments
     spec:
       containers:
-        - name: auth
-          image: emreeryigit/auth
+        - name: comments
+          image: emreeryigit/comments
           env:
             - name: POSTGRES_USER
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "password"
             - name: POSTGRES_DB
-              value: "auth"
+              value: "comments"
             - name: KAFKA_URL
               value: "kafka-srv:9092"
             - name: KAFKA_CLIENT_ID
@@ -36,12 +36,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: comments-srv
 spec:
   selector:
-    app: auth
+    app: comments
   ports:
-    - name: auth
+    - name: comments
       protocol: TCP
       port: 3000
       targetPort: 3000

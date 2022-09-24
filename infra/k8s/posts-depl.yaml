@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: posts-depl
 spec:
   selector:
     matchLabels:
-      app: auth
+      app: posts
   template:
     metadata:
       labels:
-        app: auth
+        app: posts
     spec:
       containers:
-        - name: auth
-          image: emreeryigit/auth
+        - name: posts
+          image: emreeryigit/posts
           env:
             - name: POSTGRES_USER
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "password"
             - name: POSTGRES_DB
-              value: "auth"
+              value: "posts"
             - name: KAFKA_URL
               value: "kafka-srv:9092"
             - name: KAFKA_CLIENT_ID
@@ -36,12 +36,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: posts-srv
 spec:
   selector:
-    app: auth
+    app: posts
   ports:
-    - name: auth
+    - name: posts
       protocol: TCP
       port: 3000
       targetPort: 3000
