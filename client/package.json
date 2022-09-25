@@ -9,14 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@mantine/carousel": "^5.4.1",
+    "@mantine/core": "^5.4.1",
+    "@mantine/form": "^5.4.1",
+    "@mantine/hooks": "^5.4.1",
+    "@mantine/modals": "^5.4.1",
+    "@mantine/notifications": "^5.4.1",
+    "@mantine/nprogress": "^5.4.1",
+    "@reduxjs/toolkit": "^1.8.5",
+    "@tabler/icons": "^1.100.0",
+    "axios": "^0.27.2",
+    "embla-carousel-react": "^7.0.3",
     "next": "12.3.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-redux": "^8.0.4"
   },
   "devDependencies": {
     "@types/node": "18.7.21",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
+    "@types/react-redux": "^7.1.24",
     "eslint": "8.24.0",
     "eslint-config-next": "12.3.1",
     "typescript": "4.8.3"

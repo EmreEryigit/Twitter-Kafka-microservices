@@ -5,7 +5,7 @@ const router = express.Router();
 router.get(
     "/api/user/currentuser",
     async (req: Request, res: Response) => {
-        res.status(200).send({ currentUser: req.currentUser });
+        res.status(200).send({ user: req.currentUser });
     }
 );
 

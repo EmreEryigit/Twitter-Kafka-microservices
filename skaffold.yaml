@@ -32,3 +32,15 @@ build:
         manual:
           - src: src/**/*.ts
             dest: .
+    - image: emreeryigit/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.tsx"
+            dest: .
+          - src: "**/*.ts"
+            dest: .
+          - src: "**/*.css"
+            dest: .
