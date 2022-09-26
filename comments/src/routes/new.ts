@@ -26,14 +26,17 @@ router.post(
         await commentRepo.save(comment);
         const createdProducer = new CommentCreatedProducer();
         await createdProducer.start();
-        await createdProducer.sendBatch([
-            {
-                id: comment.id,
-                postId: comment.postId,
-            },
-        ]).then(() => {
-            console.log('batch sent')
-        })
+        await createdProducer
+            .sendBatch([
+                {
+                    id: comment.id,
+                    postId: comment.postId,
+                },
+            ])
+            .then(async () => {
+                console.log("batch sent");
+                await createdProducer.shutdown();
+            });
         res.status(201).send({ comment });
     }
 );

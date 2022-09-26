@@ -6,12 +6,19 @@ import { RootState, useAppDispatch, useAppSelector } from "../store/store";
 import { userActions } from "../store/user-slice";
 
 const RequestModal = ({ user }: { user: User }) => {
+    const dispatch = useAppDispatch();
+
     const notification = useAppSelector(
         (state: RootState) => state.notification.notification
     );
-    console.log(user);
-    const dispatch = useAppDispatch();
-    dispatch(userActions.setUser(user));
+    console.log("User", user);
+
+    useEffect(() => {
+        console.log("Modal fired!");
+        dispatch(userActions.setUser(user));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const openNotify = (
         title: string,
         message: string,

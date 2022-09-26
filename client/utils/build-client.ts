@@ -1,9 +1,7 @@
 import axios, { AxiosInstance } from "axios";
-import { IncomingHttpHeaders } from "http";
 import { NextPageContext } from "next";
-import { AppContext } from "next/app";
 
-const buildClient = (req: AppContext["ctx"]["req"]): AxiosInstance => {
+const buildClient = (req: NextPageContext["req"]): AxiosInstance => {
     if (typeof window === "undefined") {
         // we are on the server
 

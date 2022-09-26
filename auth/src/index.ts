@@ -7,14 +7,8 @@ import { currentUserRouter } from "./routes/current-user";
 import { signinRouter } from "./routes/signin";
 import { signoutRouter } from "./routes/signout";
 import { signUpRouter } from "./routes/signup";
-import {
-    currentUser,
-    DatabaseConnectionError,
-    errorHandler,
-    NotFoundError,
-} from "@postcom/common";
+import { currentUser, errorHandler } from "@postcom/common";
 import { PostCreatedConsumer } from "./events/PostCreatedConsumer";
-import { UserCreatedProducer } from "./events/userCreatedProducer";
 
 const app = express();
 app.set("trust proxy", true);
@@ -46,6 +40,5 @@ app.listen(3000, async () => {
         console.log("App listening on port 3000");
     } catch (err) {
         console.log(err);
-        throw new DatabaseConnectionError();
     }
 });

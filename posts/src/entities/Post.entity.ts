@@ -23,11 +23,14 @@ export class Post {
     context: string;
 
     @Column({ nullable: true })
-    @IsUrl()
     img?: string;
 
     @Column({ nullable: false })
     userId: number;
+
+    @Column()
+    @IsString()
+    userName: string
 
     @Column({ nullable: true, default: 0 })
     commentCount: number;

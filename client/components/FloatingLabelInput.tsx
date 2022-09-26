@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, createStyles } from "@mantine/core";
+import { TextInput, createStyles, PasswordInput } from "@mantine/core";
 
 const useStyles = createStyles(
     (theme, { floating }: { floating: boolean }) => ({
@@ -47,7 +47,8 @@ interface InputProps {
     label: string;
     placeholder: string;
     onBlur: () => void;
-    value: string
+    value: string;
+    password?: boolean;
 }
 
 export function FloatingLabelInput(props: InputProps) {
@@ -56,6 +57,20 @@ export function FloatingLabelInput(props: InputProps) {
         floating: props.value.trim().length !== 0 || focused,
     });
 
+    if (props.password) {
+        return (
+            <PasswordInput
+                {...props}
+                required
+                classNames={classes}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                mt="xl"
+                autoComplete="nope"
+            />
+        );
+    }
+
     return (
         <TextInput
             {...props}
@@ -63,8 +78,8 @@ export function FloatingLabelInput(props: InputProps) {
             classNames={classes}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            mt="md"
-            autoComplete="nope"
+            mt="xl"
+            autoComplete="yes"
         />
     );
 }

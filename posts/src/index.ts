@@ -38,13 +38,12 @@ app.all("*", () => {
 app.use(errorHandler);
 app.listen(3000, async () => {
     try {
-        await AppDataSource.initialize();
         await new CommentCreatedConsumer().startBatchConsumer();
+        await AppDataSource.initialize();
     } catch (err) {
         console.log(err);
         throw new DatabaseConnectionError();
+    } finally {
+        console.log("App listening on port 3000");
     }
-
-    console.log("Connected to Db");
-    console.log("App listening on port 3000");
 });

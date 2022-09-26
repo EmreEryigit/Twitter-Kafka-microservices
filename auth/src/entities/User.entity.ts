@@ -28,6 +28,9 @@ export class User {
     @IsEmail()
     email: string;
 
+    @Column()
+    img?: string;
+
     @Exclude()
     @Column()
     @IsString()

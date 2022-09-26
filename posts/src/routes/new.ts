@@ -16,6 +16,7 @@ router.post("/api/post", requireAuth, async (req: Request, res: Response) => {
         post.img = img;
     }
     post.userId = req.currentUser!.id;
+    post.userName = req.currentUser!.name
     const errors = await validate(post);
     if (errors.length > 0) {
         throw new RequestValidationError(errors);

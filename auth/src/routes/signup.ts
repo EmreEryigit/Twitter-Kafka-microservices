@@ -34,23 +34,24 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
     }
     await userRepo.save(user);
 
-    const producer = new UserCreatedProducer();
+  /*   const producer = new UserCreatedProducer();
     await producer.start();
-    console.log("producer connected");
+    console.log("producer connected"); */
 
-    await producer.sendBatch([
+   /*  await producer.sendBatch([
         {
             id: user.id,
             email: user.email,
             name: user.name,
         },
-    ]);
+    ]); */
     console.log("batch sent");
 
     const userJwt = jwt.sign(
         {
             id: user.id,
             email: user.email,
+            name: user.name
         },
         process.env.JWT_KEY!
     );
