@@ -20,6 +20,7 @@ import { useAppDispatch } from "../../store/store";
 import buildClient from "../../utils/build-client";
 import { NextPageContext } from "next";
 import { IconArrowLeftBar, IconArrowRight } from "@tabler/icons";
+import Router from "next/router";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {
@@ -95,6 +96,7 @@ const AuthPage = () => {
         body: form.values,
         onSuccess: (data: any) => {
             dispatch(userActions.setUser(data.user));
+            Router.push('/')
         },
     });
     const submitHandler = async (values: {

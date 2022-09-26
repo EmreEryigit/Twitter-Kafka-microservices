@@ -39,6 +39,10 @@ export class Comment {
     userId: number;
 
     @Column()
+    @IsString()
+    userName: string;
+
+    @Column()
     @IsNumber()
     @IsNotEmpty()
     postId: number;

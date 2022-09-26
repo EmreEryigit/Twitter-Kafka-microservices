@@ -5,8 +5,12 @@ import { postRepo } from "../db/data-source";
 const router = express.Router();
 
 router.get("/api/post/:postId", async (req: Request, res: Response) => {
+    const postId = Number(req.params.postId);
+    if (!postId) {
+        return res.status(400).send({});
+    }
     const post = await postRepo.findOneBy({
-        id: +req.params.postId,
+        id: Number(req.params.postId),
     });
     if (!post) {
         throw new NotFoundError();
@@ -15,4 +19,4 @@ router.get("/api/post/:postId", async (req: Request, res: Response) => {
     res.send({ post });
 });
 
-export {router as showRouter}
+export { router as showRouter };

@@ -1,28 +1,19 @@
 import type { NextPage } from "next";
-
 import axios from "axios";
 import useSWR from "swr";
 import {
-    Badge,
-    Button,
     Card,
     Group,
     Loader,
     Text,
-    Avatar,
     createStyles,
     Image,
+    Badge,
+    Avatar,
 } from "@mantine/core";
-import {
-    IconArrowAutofitContent,
-    IconArrowBack,
-    IconHeart,
-    IconHeartMinus,
-    IconHearts,
-    IconMessage,
-    IconMessageCircle,
-    IconMessageCircle2,
-} from "@tabler/icons";
+import { IconArrowBack, IconHearts, IconMessageCircle2 } from "@tabler/icons";
+import Router from "next/router";
+import Link from "next/link";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const useStyles = createStyles((theme) => ({
@@ -52,6 +43,10 @@ const useStyles = createStyles((theme) => ({
     },
 
     name: {
+        color: "white",
+        fontSize: "16px",
+        letterSpacing: "2.5px",
+        textTransform: "uppercase",
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
     },
 }));
@@ -60,7 +55,6 @@ const Home: NextPage = () => {
     const { classes } = useStyles();
 
     const { data, error, isValidating } = useSWR("/api/post", fetcher);
-    console.log(data);
     if (isValidating) {
         return <Loader size="xl" variant="bars" />;
     }
@@ -69,17 +63,18 @@ const Home: NextPage = () => {
             {data?.posts.map((post: Post) => {
                 return (
                     <Card
+                        /* onClick={() => Router.push(`/post/${post.id}`)} */
                         shadow="sm"
                         p="xl"
                         m={"xl"}
                         mt={"md"}
                         pt={"0"}
                         radius="md"
-                        withBorder
                         key={post.id}
+                        withBorder
                     >
                         <Group position="apart" mt="md" mb="xs">
-                            <Group noWrap align={'center'}>
+                            <Group noWrap align={"center"}>
                                 <Avatar src={""} size={45} radius="md" />
                                 <div>
                                     <Text
@@ -88,7 +83,6 @@ const Home: NextPage = () => {
                                         className={classes.name}
                                     >
                                         {post.userName}
-
                                         {/*  {post.title} */}
                                     </Text>
                                 </div>
@@ -96,12 +90,19 @@ const Home: NextPage = () => {
                             {/*  <Badge color="pink" variant="light">
                         On Sale
                     </Badge> */}
+                            <Link href={`/post/${post.id}`}>
+                                <a>
+                                    <Badge variant="gradient" color={"grape"}>
+                                        See this post
+                                    </Badge>
+                                </a>
+                            </Link>
                         </Group>
 
                         {/*  <Text size="sm" color="dimmed"></Text> */}
 
                         <Card.Section>
-                            <Text p={"md"} size={"xl"} color={"white"}>
+                            <Text p={"md"} size={"md"} color={"white"}>
                                 {post.context}
                             </Text>
                         </Card.Section>

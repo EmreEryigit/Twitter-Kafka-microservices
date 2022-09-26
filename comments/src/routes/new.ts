@@ -17,6 +17,7 @@ router.post(
         comment.postId = +req.params.postId;
         comment.text = text;
         comment.userId = req.currentUser!.id;
+        comment.userName = req.currentUser!.name;
         console.log(comment);
         const errors = await validate(comment);
         if (errors.length > 0) {

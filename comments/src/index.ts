@@ -8,6 +8,7 @@ import {
     errorHandler,
 } from "@postcom/common";
 import { createCommentRouter } from "./routes/new";
+import { findByPostRouter } from "./routes/findByPost";
 
 const app = express();
 app.set("trust proxy", true);
@@ -20,6 +21,7 @@ app.use(
 );
 app.use(currentUser);
 app.use(createCommentRouter);
+app.use(findByPostRouter);
 app.all("*", () => {
     throw new Error();
 });

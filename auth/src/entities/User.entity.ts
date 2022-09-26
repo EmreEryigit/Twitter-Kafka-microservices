@@ -28,9 +28,6 @@ export class User {
     @IsEmail()
     email: string;
 
-    @Column()
-    img?: string;
-
     @Exclude()
     @Column()
     @IsString()
@@ -39,10 +36,5 @@ export class User {
     @BeforeInsert()
     async BeforeInsert() {
         this.password = await PasswordMethods.hashPassword(this.password);
-    }
-
-    @AfterInsert()
-    logInsert() {
-        console.log(this.id);
     }
 }

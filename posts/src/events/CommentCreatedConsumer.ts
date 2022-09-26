@@ -5,6 +5,7 @@ import {
     UserCreatedEvent,
 } from "@postcom/common";
 import { postRepo } from "../db/data-source";
+import { Post } from "../entities/Post.entity";
 import { client } from "./client";
 import { groupId } from "./groupId";
 
@@ -29,10 +30,7 @@ export class CommentCreatedConsumer extends ConsumerFactory<CommentCreatedEvent>
         });
         console.log(post);
 
-        if (!post) {
-            throw new NotFoundError();
-        }
-        post.commentCount = post.commentCount + 1;
-        await postRepo.save(post);
+        post!.commentCount = post!.commentCount + 1;
+        await postRepo.save(post as Post);
     }
 }

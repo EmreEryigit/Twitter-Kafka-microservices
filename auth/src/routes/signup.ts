@@ -15,7 +15,7 @@ import { UserCreatedProducer } from "../events/userCreatedProducer";
 const router = express.Router();
 
 router.post("/api/user/signup", async (req: Request, res: Response) => {
-    const { email, password, name } = req.body;
+    const { email, password, name, img } = req.body;
     const foundUser = await userRepo.findOneBy({
         email: email,
     });
@@ -34,11 +34,11 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
     }
     await userRepo.save(user);
 
-  /*   const producer = new UserCreatedProducer();
+    /*   const producer = new UserCreatedProducer();
     await producer.start();
     console.log("producer connected"); */
 
-   /*  await producer.sendBatch([
+    /*  await producer.sendBatch([
         {
             id: user.id,
             email: user.email,
@@ -51,7 +51,7 @@ router.post("/api/user/signup", async (req: Request, res: Response) => {
         {
             id: user.id,
             email: user.email,
-            name: user.name
+            name: user.name,
         },
         process.env.JWT_KEY!
     );

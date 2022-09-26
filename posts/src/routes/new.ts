@@ -11,12 +11,10 @@ router.post("/api/post", requireAuth, async (req: Request, res: Response) => {
     const { title, context, img } = req.body;
     const post = new Post();
     post.context = context;
-    post.title = title;
-    if (img) {
-        post.img = img;
-    }
+    post.img = img;
+   
     post.userId = req.currentUser!.id;
-    post.userName = req.currentUser!.name
+    post.userName = req.currentUser!.name;
     const errors = await validate(post);
     if (errors.length > 0) {
         throw new RequestValidationError(errors);
@@ -29,7 +27,7 @@ router.post("/api/post", requireAuth, async (req: Request, res: Response) => {
         {
             userId: post.userId,
             id: post.id,
-            title: post.title,
+            context: post.context,
         },
     ]);
 

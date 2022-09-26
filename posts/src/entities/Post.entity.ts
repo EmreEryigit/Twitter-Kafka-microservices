@@ -16,10 +16,6 @@ export class Post {
 
     @Column()
     @IsString()
-    title: string;
-
-    @Column()
-    @IsString()
     context: string;
 
     @Column({ nullable: true })
@@ -30,7 +26,7 @@ export class Post {
 
     @Column()
     @IsString()
-    userName: string
+    userName: string;
 
     @Column({ nullable: true, default: 0 })
     commentCount: number;
