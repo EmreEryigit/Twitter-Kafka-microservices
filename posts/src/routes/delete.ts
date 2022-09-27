@@ -18,7 +18,7 @@ router.delete(
             throw new UnauthorizedError();
         }
 
-        const deletedPost = await postRepo.softDelete(post);
+        const deletedPost = await postRepo.remove(post);
 
         res.status(204).send({deletedPost});
     }

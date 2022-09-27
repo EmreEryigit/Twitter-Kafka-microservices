@@ -8,11 +8,11 @@ import { PostCreatedProducer } from "../events/PostCreatedProducer";
 const router = express.Router();
 
 router.post("/api/post", requireAuth, async (req: Request, res: Response) => {
-    const { title, context, img } = req.body;
+    const { context, img } = req.body;
     const post = new Post();
     post.context = context;
     post.img = img;
-   
+
     post.userId = req.currentUser!.id;
     post.userName = req.currentUser!.name;
     const errors = await validate(post);

@@ -13,16 +13,18 @@ import {
     Textarea,
 } from "@mantine/core";
 import axios from "axios";
+import moment from "moment";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import React, { useState } from "react";
 import useSWR from "swr";
 import useRequest from "../../hooks/use-request";
+import { RootState, useAppSelector } from "../../store/store";
 
 const useStyles = createStyles((theme) => ({
     container: {
-        width: "80vw",
+        width: "75vw",
         display: "flex",
         justifyContent: "center",
         alignContent: "stretch",
@@ -50,6 +52,12 @@ const useStyles = createStyles((theme) => ({
         margin: "5px",
         padding: "10px",
     },
+    loading: {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        zIndex: 999,
+    },
 }));
 
 const PostPage: NextPage = () => {
@@ -57,17 +65,24 @@ const PostPage: NextPage = () => {
     const [textAreaComment, setTextAreaComment] = useState("");
     const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
+    const user = useAppSelector((state: RootState) => state.user.user);
+
     const router = useRouter();
     const { postId } = router.query;
-    const { data, error, isValidating, mutate } = useSWR(
+
+    // fetch post
+    const { data, error, isValidating, mutate } = useSWR<{ post: Post }>(
         `/api/post/${postId}`,
         fetcher
     );
+
+    // fetch comments for post
     const {
         data: commentsData,
         error: commentError,
         isValidating: commentLoading,
-    } = useSWR(`/api/comment/${postId}`, fetcher);
+    } = useSWR<{ postComments: Comment[] }>(`/api/comment/${postId}`, fetcher);
+    // post comment
     const { doRequest } = useRequest({
         url: `/api/comment/${data?.post.id}`,
         method: "post",
@@ -88,13 +103,14 @@ const PostPage: NextPage = () => {
             return;
         }
         doRequest();
+        setTextAreaComment("");
     };
 
     return (
         <div className={classes.container}>
             <LoadingOverlay
                 loaderProps={{ size: "xl", color: "purple", variant: "bars" }}
-                visible={isValidating || commentLoading}
+                visible={isValidating}
                 transitionDuration={500}
             />
             <Card
@@ -118,20 +134,15 @@ const PostPage: NextPage = () => {
                                 className={classes.name}
                             >
                                 {data?.post.userName}
-
-                                {/*  {post.title} */}
+                            </Text>
+                            <Text size="md" weight={300} color="dimmed">
+                                {moment(data?.post.createdAt).fromNow()}
                             </Text>
                         </div>
                     </Group>
-                    {/*  <Badge color="pink" variant="light">
-                On Sale
-            </Badge> */}
                 </Group>
-
-                {/*  <Text size="sm" color="dimmed"></Text> */}
-
                 <Card.Section>
-                    <Text p={"md"} size={"xl"} color={"white"}>
+                    <Text p={"md"} size={"xl"} color={"dimmed"}>
                         {data?.post.context}
                     </Text>
                 </Card.Section>
@@ -146,52 +157,81 @@ const PostPage: NextPage = () => {
                         />
                     )}
                 </Card.Section>
-                <Divider mt={"lg"} />
-                {commentsData?.postComments?.map((comment: Comment) => {
-                    return (
-                        <>
-                            <div
-                                className={classes.flexContainer}
-                                key={comment.id}
-                            >
-                                <Group>
-                                    <Avatar src={""} radius="xl" />
-                                    <div>
-                                        <Text size="sm">
-                                            {comment.userName}
-                                        </Text>
-                                        <Text size="xs" color="dimmed">
-                                            {/*     {postedAt} */}asdf
-                                        </Text>
-                                    </div>
-                                </Group>
-                                <Text className={classes.body} size="sm">
-                                    {comment.text}
-                                </Text>
-                            </div>
-                            <Divider />
-                        </>
-                    );
-                })}
 
-                <Textarea
-                    value={textAreaComment}
-                    onChange={(e) => setTextAreaComment(e.currentTarget.value)}
-                    mt={"lg"}
-                    radius={"lg"}
-                    p={"md"}
-                    label="Your comment"
-                    inputMode="text"
-                />
-                <Button
-                    onClick={postComment}
-                    size="md"
-                    fullWidth
-                    variant="gradient"
-                    gradient={{ from: "purple", to: "blue", deg: 45 }}
+                {user && (
+                    <>
+                        <Textarea
+                            value={textAreaComment}
+                            onChange={(e) =>
+                                setTextAreaComment(e.currentTarget.value)
+                            }
+                            my={"lg"}
+                            radius={"lg"}
+                            label="Your comment"
+                            inputMode="text"
+                        />
+                        <Button
+                            onClick={postComment}
+                            size="md"
+                            fullWidth
+                            variant="gradient"
+                            gradient={{ from: "purple", to: "blue", deg: 45 }}
+                        >
+                            Leave a comment!
+                        </Button>
+                    </>
+                )}
+                <Divider mt={"lg"} />
+                <div
+                    style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                    }}
                 >
-                    Leave a comment!
-                </Button>
+                    <LoadingOverlay
+                        loaderProps={{
+                            size: "xl",
+                            color: "purple",
+                            variant: "bars",
+                        }}
+                        className={classes.loading}
+                        visible={commentLoading}
+                        transitionDuration={500}
+                    />
+                    {commentsData?.postComments?.map((comment: Comment) => {
+                        return (
+                            <>
+                                <div
+                                    className={classes.flexContainer}
+                                    key={comment.id}
+                                >
+                                    <Group>
+                                        <Avatar src={""} radius="xl" />
+                                        <div>
+                                            <Text size="lg">
+                                                {comment.userName}
+                                            </Text>
+                                            <Text size="xs" color="dimmed">
+                                                {moment(
+                                                    comment.createdAt
+                                                ).fromNow()}
+                                            </Text>
+                                        </div>
+                                    </Group>
+                                    <Text
+                                        className={classes.body}
+                                        color="dimmed"
+                                        size="sm"
+                                    >
+                                        {comment.text}
+                                    </Text>
+                                </div>
+                                <Divider />
+                            </>
+                        );
+                    })}
+                </div>
             </Card>
         </div>
     );

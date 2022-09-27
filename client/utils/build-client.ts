@@ -1,7 +1,10 @@
 import axios, { AxiosInstance } from "axios";
 import { NextPageContext } from "next";
+import { AppContext } from "next/app";
 
-const buildClient = (req: NextPageContext["req"]): AxiosInstance => {
+const buildClient = (
+    req: NextPageContext["req"] | AppContext["ctx"]["req"]
+): AxiosInstance => {
     if (typeof window === "undefined") {
         // we are on the server
 

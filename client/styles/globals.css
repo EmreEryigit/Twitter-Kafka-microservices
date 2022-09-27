@@ -28,9 +28,9 @@ body {
         color-scheme: dark;
     }
     body {
-        color: white;
-        background: black;
-     
+        color: rgb(158, 11, 151);
+        background: linear-gradient(45deg, rgba(128, 8, 122, 0.582),rgb(42, 1, 40));
+        min-height: 100vh;
     }
 }
 

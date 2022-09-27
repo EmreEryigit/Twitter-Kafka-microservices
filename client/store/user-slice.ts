@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface setUserAction {
     type: string;
-    payload: User;
+    payload: User | null;
 }
 
 interface InitialState {

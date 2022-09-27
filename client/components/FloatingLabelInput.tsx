@@ -74,7 +74,6 @@ export function FloatingLabelInput(props: InputProps) {
     return (
         <TextInput
             {...props}
-            required
             classNames={classes}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}

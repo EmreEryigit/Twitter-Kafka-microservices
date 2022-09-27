@@ -68,18 +68,21 @@ const AuthPage = () => {
     const { classes } = useStyles();
 
     const form = useForm({
-        initialValues: {
-            name: "",
-            email: "",
-            password: "",
-        },
+        initialValues:
+            type === "register"
+                ? { name: "", email: "", password: "" }
+                : {
+                      name: "",
+                      email: "",
+                      password: "",
+                  },
         validate: {
             email: (value) =>
                 /[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(value)
                     ? null
                     : "Invalid email",
-            name: (value) =>
-                /^[a-z0-9]{3,30}$/i.test(value) ? null : "Invalid name",
+            /* name: (value) =>
+                /^[a-z0-9]{3,30}$/i.test(value) ? null : "Invalid name", */
             /* password: (value) =>
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_]{5,16}$/.test(
                     value
@@ -90,25 +93,55 @@ const AuthPage = () => {
     });
 
     // form submition
-    const { doRequest } = useRequest({
+    const { doRequest: register } = useRequest({
         url: "/api/user/signup",
         method: "post",
         body: form.values,
-        onSuccess: (data: any) => {
+        onSuccess: (data: { user: User }) => {
             dispatch(userActions.setUser(data.user));
-            Router.push('/')
+            form.reset();
+            Router.push("/");
         },
     });
+
+    const { doRequest: login } = useRequest({
+        url: "/api/user/signin",
+        method: "post",
+        body: {
+            email: form.values.email,
+            password: form.values.password,
+        },
+        onSuccess: (data: { user: User }) => {
+            dispatch(userActions.setUser(data.user));
+            form.reset();
+            Router.push("/");
+        },
+    });
+
     const submitHandler = async (values: {
         name: string;
         email: string;
         password: string;
     }) => {
-        const isValid = form.validate();
-        if (isValid.hasErrors) {
-            return;
+        if (type === "login") {
+            console.log("login");
+            if (
+                form.validateField("email").hasError &&
+                form.validateField("password").hasError
+            ) {
+                return;
+            } else {
+                console.log(form.values.email, form.values.password);
+                await login();
+            }
+        } else if (type === "register") {
+            console.log("register");
+            const isValid = form.validate();
+            if (isValid.hasErrors) {
+                return;
+            }
+            await register();
         }
-        await doRequest();
     };
 
     //
@@ -176,7 +209,7 @@ const AuthPage = () => {
                             size="xs"
                         >
                             {type === "register"
-                                ? `Already have an account? Login`
+                                ? "Already have an account? Login"
                                 : "Don't have an account? Register"}
                         </Anchor>
                         <IconArrowRight />
