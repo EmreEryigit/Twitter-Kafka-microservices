@@ -1,4 +1,4 @@
-import type { NextPage, NextPageContext } from "next";
+import type { NextPage } from "next";
 import axios from "axios";
 import useSWR from "swr";
 import {
@@ -10,11 +10,7 @@ import {
     Image,
     Badge,
     Avatar,
-    Textarea,
     Button,
-    TextInput,
-    Divider,
-    Drawer,
     CloseButton,
     Modal,
 } from "@mantine/core";
@@ -23,10 +19,8 @@ import Link from "next/link";
 import moment from "moment";
 import Router from "next/router";
 import { RootState, useAppSelector } from "../store/store";
-import { FloatingLabelInput } from "../components/FloatingLabelInput";
 import { useState } from "react";
 import DrawerWrapper from "../components/Drawer";
-import useRequest from "../hooks/use-request";
 
 // for turkish language
 /* import 'moment/locale/tr' */
@@ -87,7 +81,6 @@ const Home: NextPage = () => {
             setOpened(false);
         });
     };
-
     return (
         <div className={classes.container}>
             <Group align={"center"} spacing={0} p="lg">

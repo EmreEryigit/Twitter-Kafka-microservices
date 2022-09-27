@@ -2,12 +2,9 @@ import React from "react";
 import {
     Paper,
     createStyles,
-    TextInput,
-    PasswordInput,
     Checkbox,
     Button,
     Title,
-    Text,
     Anchor,
     Group,
 } from "@mantine/core";
@@ -19,7 +16,7 @@ import useRequest from "../../hooks/use-request";
 import { useAppDispatch } from "../../store/store";
 import buildClient from "../../utils/build-client";
 import { NextPageContext } from "next";
-import { IconArrowLeftBar, IconArrowRight } from "@tabler/icons";
+import { IconArrowRight } from "@tabler/icons";
 import Router from "next/router";
 
 const useStyles = createStyles((theme) => ({

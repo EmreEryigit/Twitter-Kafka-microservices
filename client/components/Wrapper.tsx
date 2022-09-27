@@ -7,9 +7,12 @@ import {
     MediaQuery,
     Burger,
     useMantineTheme,
+    Group,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import { NavBarSide } from "./Navbar";
+import { ToggleColorMode } from "./ToggleColorMode";
+import { IconBrandTwitter } from "@tabler/icons";
 
 export default function WrapperSkeleton({ children }: { children: ReactNode }) {
     const theme = useMantineTheme();
@@ -45,7 +48,9 @@ export default function WrapperSkeleton({ children }: { children: ReactNode }) {
                         style={{
                             display: "flex",
                             alignItems: "center",
+                            justifyContent: "space-between",
                             height: "100%",
+                            width: "100%",
                         }}
                     >
                         <MediaQuery
@@ -61,7 +66,14 @@ export default function WrapperSkeleton({ children }: { children: ReactNode }) {
                             />
                         </MediaQuery>
 
-                        <Text>Application header</Text>
+                        <Group p={"lg"}>
+                            <IconBrandTwitter
+                                color="indigo"
+                                size={48}
+                                stroke={2}
+                            />
+                        </Group>
+                        <ToggleColorMode />
                     </div>
                 </Header>
             }

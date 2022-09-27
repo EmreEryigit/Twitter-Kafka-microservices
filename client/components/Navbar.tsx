@@ -93,7 +93,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
             "&, &:hover": {
                 backgroundColor: theme.fn.variant({
                     variant: "light",
-                    color: theme.primaryColor,
+                    color: 'grape',
                 }).background,
                 color: theme.fn.variant({
                     variant: "light",

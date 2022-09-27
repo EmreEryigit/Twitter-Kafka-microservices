@@ -12,8 +12,8 @@ import useRequest from "../hooks/use-request";
 
 const useStyles = createStyles({
     shareButton: {
-        position: "fixed",
-        top: 20,
+        position: "absolute",
+        top: 90,
         right: 20,
     },
     backGroundDiv: {
